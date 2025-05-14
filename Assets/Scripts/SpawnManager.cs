@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -5,6 +6,7 @@ public class SpawnManager : MonoBehaviour
 {
     [SerializeField] private GameObject _enemyPrefab;
     [SerializeField] private GameObject _powerupPrefab;
+    [SerializeField] private TextMeshProUGUI _currentWaveText;
 
     private int _waveNumber = 1;
     private float _spawnRange = 9;
@@ -24,6 +26,7 @@ public class SpawnManager : MonoBehaviour
         Instantiate(_powerupPrefab, GenerateSpawnPosition(), _powerupPrefab.transform.rotation);
         
         _waveNumber++;
+        _currentWaveText.text = $"Wave: {_waveNumber}";
         SpawnWave(_waveNumber);
             
     }
