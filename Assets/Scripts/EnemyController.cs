@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class EnemyController : MonoBehaviour
@@ -19,6 +20,20 @@ public class EnemyController : MonoBehaviour
         
         if(!(transform.position.y < -10)) return;
         
-            Destroy(gameObject);
+        Destroy(gameObject);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (!(other.gameObject.CompareTag("Projectile"))) return;
+
+        var punchDirection = transform.position - _player.transform.position;
+        punchDirection.y = 0;
+        
+        Debug.DrawRay(transform.position, punchDirection.normalized * 5, Color.green, 2);
+        
+        _enemyRb.AddForce(punchDirection.normalized * 25, ForceMode.Impulse);
+        
+        Destroy(other.gameObject);
     }
 }

@@ -4,16 +4,15 @@ using Random = UnityEngine.Random;
 
 public class SpawnManager : MonoBehaviour
 {
-    [SerializeField] private GameObject _enemyPrefab;
-    [SerializeField] private GameObject _powerupPrefab;
+    [SerializeField] private GameObject[] _powerupPrefabs;
     [SerializeField] private TextMeshProUGUI _currentWaveText;
+    [SerializeField] private GameObject[] _enemyPrefabs;
 
     private int _waveNumber = 1;
     private float _spawnRange = 9;
     
     void Start()
     {
-        Instantiate(_powerupPrefab, GenerateSpawnPosition(), _powerupPrefab.transform.rotation);
         SpawnWave(_waveNumber);
     }
 
@@ -22,8 +21,6 @@ public class SpawnManager : MonoBehaviour
         var enemyCount = FindObjectsOfType<EnemyController>().Length;
         
         if(enemyCount != 0) return;
-        
-        Instantiate(_powerupPrefab, GenerateSpawnPosition(), _powerupPrefab.transform.rotation);
         
         _waveNumber++;
         _currentWaveText.text = $"Wave: {_waveNumber}";
@@ -44,7 +41,13 @@ public class SpawnManager : MonoBehaviour
     {
         for (int i = 0; i < amount; i++)
         {
-            Instantiate(_enemyPrefab, GenerateSpawnPosition(), _enemyPrefab.transform.rotation);    
+            var randomEnemy = _enemyPrefabs[Random.Range(0, _enemyPrefabs.Length)];
+            
+            Instantiate(randomEnemy, GenerateSpawnPosition(), randomEnemy.transform.rotation);    
         }   
+        
+        var randomPowerup = _powerupPrefabs[Random.Range(0, _powerupPrefabs.Length)];
+        
+        Instantiate(randomPowerup, GenerateSpawnPosition(), randomPowerup.transform.rotation);
     }
 }
