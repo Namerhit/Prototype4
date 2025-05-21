@@ -4,9 +4,12 @@ using Random = UnityEngine.Random;
 
 public class SpawnManager : MonoBehaviour
 {
-    [SerializeField] private GameObject[] _powerupPrefabs;
     [SerializeField] private TextMeshProUGUI _currentWaveText;
+
     [SerializeField] private GameObject[] _enemyPrefabs;
+    [SerializeField] private GameObject[] _powerupPrefabs;
+
+    [SerializeField] private GameObject _bossEnemy;
 
     private int _waveNumber = 1;
     private float _spawnRange = 9;
@@ -28,26 +31,33 @@ public class SpawnManager : MonoBehaviour
             
     }
 
-    private Vector3 GenerateSpawnPosition()
+    private Vector3 GenerateSpawnPosition(float yPosition)
     {
         var spawnPositionX = Random.Range(-_spawnRange, _spawnRange);
         var spawnPositionZ = Random.Range(-_spawnRange, _spawnRange);
-        var randomPosition = new Vector3(spawnPositionX, 0, spawnPositionZ);
+        var randomPosition = new Vector3(spawnPositionX, yPosition, spawnPositionZ);
 
         return randomPosition;
     }
 
     private void SpawnWave(int amount)
     {
-        for (int i = 0; i < amount; i++)
+        if (amount % 5 == 0 && amount != 0)
         {
-            var randomEnemy = _enemyPrefabs[Random.Range(0, _enemyPrefabs.Length)];
-            
-            Instantiate(randomEnemy, GenerateSpawnPosition(), randomEnemy.transform.rotation);    
-        }   
+            Instantiate(_bossEnemy, GenerateSpawnPosition(3f), _bossEnemy.transform.rotation);
+        }
+        else
+        {
+            for (int i = 0; i < amount; i++)
+            {
+                var randomEnemy = _enemyPrefabs[Random.Range(0, _enemyPrefabs.Length)];
+                
+                Instantiate(randomEnemy, GenerateSpawnPosition(0f), randomEnemy.transform.rotation);    
+            }
+        }
         
         var randomPowerup = _powerupPrefabs[Random.Range(0, _powerupPrefabs.Length)];
         
-        Instantiate(randomPowerup, GenerateSpawnPosition(), randomPowerup.transform.rotation);
+        Instantiate(randomPowerup, GenerateSpawnPosition(0f), randomPowerup.transform.rotation);
     }
 }
